@@ -43,12 +43,12 @@ class XLSXWriter
 			}
 		}
 	}
-	
+
 	public function setTempDir($dir)
 	{
 		$this->temp_dir = $dir;
 	}
-	
+
 	protected function tempFilename()
 	{
 		$temp_dir = is_null($this->temp_dir) ? sys_get_temp_dir() : $this->temp_dir;
@@ -301,7 +301,7 @@ class XLSXWriter
 		$sheet->file_writer->close();
 		$sheet->finalized=true;
 	}
-	
+
 	public function markMergedCell($sheet_name, $start_cell_row, $start_cell_column, $end_cell_row, $end_cell_column)
 	{
 		if (empty($sheet_name) || $this->sheets[$sheet_name]->finalized)
@@ -370,12 +370,12 @@ class XLSXWriter
 		//$file->write(		'<numFmt formatCode="YYYY-MM-DD\ HH:MM:SS" numFmtId="166"/>');
 		//$file->write(		'<numFmt formatCode="YYYY-MM-DD" numFmtId="167"/>');
 		$file->write('</numFmts>');
-		$file->write('<fonts count="4">');
-		$file->write(		'<font><name val="Arial"/><charset val="1"/><family val="2"/><sz val="10"/></font>');
-		$file->write(		'<font><name val="Arial"/><family val="0"/><sz val="10"/></font>');
-		$file->write(		'<font><name val="Arial"/><family val="0"/><sz val="10"/></font>');
-		$file->write(		'<font><name val="Arial"/><family val="0"/><sz val="10"/></font>');
-		$file->write('</fonts>');
+        $file->write('<fonts count="4">');
+        $file->write(       '<font><sz val="10"/><name val="Arial"/><family val="2"/><charset val="1"/></font>');
+        $file->write(       '<font><sz val="10"/><name val="Arial"/><family val="0"/></font>');
+        $file->write(       '<font><sz val="10"/><name val="Arial"/><family val="0"/></font>');
+        $file->write(       '<font><sz val="10"/><name val="Arial"/><family val="0"/></font>');
+        $file->write('</fonts>');
 		$file->write('<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>');
 		$file->write('<borders count="1"><border diagonalDown="false" diagonalUp="false"><left/><right/><top/><bottom/><diagonal/></border></borders>');
 		$file->write(	'<cellStyleXfs count="20">');
