@@ -13,6 +13,7 @@ class XLSXWriter
 	const EXCEL_2007_MAX_COL=16384;
 	//------------------------------------------------------------------
 	protected $author ='Doc Author';
+	protected $freeze_header = false;
 	protected $sheets = array();
 	protected $shared_strings = array();//unique set
 	protected $shared_string_count = 0;//count of non-unique references to the unique set
@@ -21,7 +22,6 @@ class XLSXWriter
 	protected $cell_types = array();//contains friendly format like datetime
 
 	protected $current_sheet = '';
-	protected $temp_dir = NULL;
 
 	public function __construct()
 	{
@@ -34,6 +34,7 @@ class XLSXWriter
 	}
 
 	public function setAuthor($author='') { $this->author=$author; }
+	public function setFreezeHeader($freeze) { $this->freeze_header=$freeze; }
 
 	public function __destruct()
 	{
@@ -44,15 +45,9 @@ class XLSXWriter
 		}
 	}
 
-	public function setTempDir($dir)
-	{
-		$this->temp_dir = $dir;
-	}
-
 	protected function tempFilename()
 	{
-		$temp_dir = is_null($this->temp_dir) ? sys_get_temp_dir() : $this->temp_dir;
-		$filename = tempnam($temp_dir, "xlsx_writer_");
+		$filename = tempnam(sys_get_temp_dir(), "xlsx_writer_");
 		$this->temp_files[] = $filename;
 		return $filename;
 	}
@@ -146,7 +141,13 @@ class XLSXWriter
 		$sheet->max_cell_tag_end = $sheet->file_writer->ftell();
 		$sheet->file_writer->write(  '<sheetViews>');
 		$sheet->file_writer->write(    '<sheetView colorId="64" defaultGridColor="true" rightToLeft="false" showFormulas="false" showGridLines="true" showOutlineSymbols="true" showRowColHeaders="true" showZeros="true" tabSelected="' . $tabselected . '" topLeftCell="A1" view="normal" windowProtection="false" workbookViewId="0" zoomScale="100" zoomScaleNormal="100" zoomScalePageLayoutView="100">');
-		$sheet->file_writer->write(      '<selection activeCell="A1" activeCellId="0" pane="topLeft" sqref="A1"/>');
+        if ($this->freeze_header) {
+            $sheet->file_writer->write(      '<pane xSplit="0" ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen" />');
+            $sheet->file_writer->write(      '<selection activeCell="A1" activeCellId="0" pane="topLeft" sqref="A1"/>');
+            $sheet->file_writer->write(      '<selection activeCell="A2" activeCellId="0" pane="bottomLeft" sqref="B1" />');
+        } else {
+            $sheet->file_writer->write(      '<selection activeCell="A1" activeCellId="0" pane="topLeft" sqref="A1"/>');
+        }
 		$sheet->file_writer->write(    '</sheetView>');
 		$sheet->file_writer->write(  '</sheetViews>');
 		$sheet->file_writer->write(  '<cols>');
@@ -370,12 +371,12 @@ class XLSXWriter
 		//$file->write(		'<numFmt formatCode="YYYY-MM-DD\ HH:MM:SS" numFmtId="166"/>');
 		//$file->write(		'<numFmt formatCode="YYYY-MM-DD" numFmtId="167"/>');
 		$file->write('</numFmts>');
-        $file->write('<fonts count="4">');
-        $file->write(       '<font><sz val="10"/><name val="Arial"/><family val="2"/><charset val="1"/></font>');
-        $file->write(       '<font><sz val="10"/><name val="Arial"/><family val="0"/></font>');
-        $file->write(       '<font><sz val="10"/><name val="Arial"/><family val="0"/></font>');
-        $file->write(       '<font><sz val="10"/><name val="Arial"/><family val="0"/></font>');
-        $file->write('</fonts>');
+		$file->write('<fonts count="4">');
+		$file->write(		'<font><name val="Arial"/><charset val="1"/><family val="2"/><sz val="10"/></font>');
+		$file->write(		'<font><name val="Arial"/><family val="0"/><sz val="10"/></font>');
+		$file->write(		'<font><name val="Arial"/><family val="0"/><sz val="10"/></font>');
+		$file->write(		'<font><name val="Arial"/><family val="0"/><sz val="10"/></font>');
+		$file->write('</fonts>');
 		$file->write('<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>');
 		$file->write('<borders count="1"><border diagonalDown="false" diagonalUp="false"><left/><right/><top/><bottom/><diagonal/></border></borders>');
 		$file->write(	'<cellStyleXfs count="20">');
