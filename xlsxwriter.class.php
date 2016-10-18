@@ -142,9 +142,9 @@ class XLSXWriter
 		$sheet->file_writer->write(  '<sheetViews>');
 		$sheet->file_writer->write(    '<sheetView colorId="64" defaultGridColor="true" rightToLeft="false" showFormulas="false" showGridLines="true" showOutlineSymbols="true" showRowColHeaders="true" showZeros="true" tabSelected="' . $tabselected . '" topLeftCell="A1" view="normal" windowProtection="false" workbookViewId="0" zoomScale="100" zoomScaleNormal="100" zoomScalePageLayoutView="100">');
         if ($this->freeze_header) {
-            $sheet->file_writer->write(      '<pane xSplit="0" ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen" />');
+            $sheet->file_writer->write(      '<pane xSplit="0" ySplit="1" topLeftCell="A2" activePane="topLeft" state="frozen" />');
             $sheet->file_writer->write(      '<selection activeCell="A1" activeCellId="0" pane="topLeft" sqref="A1"/>');
-            $sheet->file_writer->write(      '<selection activeCell="A2" activeCellId="0" pane="bottomLeft" sqref="B1" />');
+            //$sheet->file_writer->write(      '<selection activeCell="A2" activeCellId="0" pane="bottomLeft" sqref="B1" />');
         } else {
             $sheet->file_writer->write(      '<selection activeCell="A1" activeCellId="0" pane="topLeft" sqref="A1"/>');
         }
