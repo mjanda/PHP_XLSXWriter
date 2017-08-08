@@ -14,6 +14,7 @@ class XLSXWriter
 	//------------------------------------------------------------------
 	protected $author ='Doc Author';
 	protected $freeze_header = false;
+	protected $column_widths = [];
 	protected $sheets = array();
 	protected $shared_strings = array();//unique set
 	protected $shared_string_count = 0;//count of non-unique references to the unique set
@@ -35,6 +36,7 @@ class XLSXWriter
 
 	public function setAuthor($author='') { $this->author=$author; }
 	public function setFreezeHeader($freeze) { $this->freeze_header=$freeze; }
+	public function setColumnWIdths($column_widths) { $this->column_widths=$column_widths; }
 
 	public function __destruct()
 	{
@@ -151,7 +153,17 @@ class XLSXWriter
 		$sheet->file_writer->write(    '</sheetView>');
 		$sheet->file_writer->write(  '</sheetViews>');
 		$sheet->file_writer->write(  '<cols>');
-		$sheet->file_writer->write(    '<col collapsed="false" hidden="false" max="1025" min="1" style="0" width="11.5"/>');
+
+		// generate columns
+		$i = 0;
+		if (count($this->column_widths)) {
+			for (;$i <= max(array_keys($this->column_widths)); $i++) {
+				$sheet->file_writer->write(    '<col collapsed="false" hidden="false" max="'.$i.'" min="'.$i.'" style="0" width="' .(array_key_exists($i, $this->column_widths) ? $this->column_widths[$i] : 11.5). '"/>');
+			}
+		}
+		// nastavim pro zbyle sloupce
+		$sheet->file_writer->write(    '<col collapsed="false" hidden="false" max="1025" min="'.$i.'" style="0" width="11.5"/>');
+
 		$sheet->file_writer->write(  '</cols>');
 		$sheet->file_writer->write(  '<sheetData>');
 	}
