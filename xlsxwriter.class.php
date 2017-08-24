@@ -155,7 +155,7 @@ class XLSXWriter
 		$sheet->file_writer->write(  '<cols>');
 
 		// generate columns
-		$i = 0;
+		$i = 1;
 		if (count($this->column_widths)) {
 			for (;$i <= max(array_keys($this->column_widths)); $i++) {
 				$sheet->file_writer->write(    '<col collapsed="false" hidden="false" max="'.$i.'" min="'.$i.'" style="0" width="' .(array_key_exists($i, $this->column_widths) ? $this->column_widths[$i] : 11.5). '"/>');
